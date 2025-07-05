@@ -37,4 +37,14 @@ module.exports = {
     const { error } = await supabase.from('profiles').delete().eq('user_id', id);
     if (error) throw new Error(error.message);
   },
+
+   getProfileByEmail: async (email) => {
+    const { data: result, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('email', email)
+      .single();
+    if (error) throw new Error(error.message);
+    return result;
+  },
 };

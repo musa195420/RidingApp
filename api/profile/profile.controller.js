@@ -4,6 +4,7 @@ const {
   getAllProfiles,
   updateProfile,
   deleteProfile,
+  getProfileByEmail
 } = require('./profile.service');
 
 module.exports = {
@@ -60,5 +61,29 @@ module.exports = {
       console.error(err);
       return res.status(500).json({ success: false, status: 500, message: 'Database Error', error: err.message });
     }
+  },  /* ───────── Read (by email — BODY) ───────── */
+  getProfileByEmail: async (req, res) => {
+    const { email } = req.body;               // ← email comes from body
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, status: 400, message: 'Email is required' });
+    }
+
+    try {
+      const result = await getProfileByEmail(email);
+      if (!result) {
+        return res
+          .status(404)
+          .json({ success: false, status: 404, message: 'Profile not found' });
+      }
+      return res.status(200).json({ success: true, status: 200, data: result });
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ success: false, status: 500, message: 'Database Error', error: err.message });
+    }
   },
+
 };

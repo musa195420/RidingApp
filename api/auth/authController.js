@@ -10,10 +10,19 @@ const {
 const { REFRESH_TOKEN_SECRET, TOKEN_TIME } = process.env;
 
 /* ────────── Register ────────── */
+/* ────────── Register ────────── */
 const register = async (req, res) => {
-  const { email, password, fullName, phone } = req.body;
+  const {
+    email,
+    password,
+    fullName,
+    phone,
+    role_id,        // take from body
+    profile_image,  // take from body (may be empty string)
+  } = req.body;
 
   try {
+    // 1) create auth user
     const { data: authUser, error: authErr } =
       await supabase.auth.admin.createUser({
         email,
@@ -23,30 +32,28 @@ const register = async (req, res) => {
 
     if (authErr) {
       return res.status(400).json({
-        data: {
-          success: false,
-          status: 400,
-          message: authErr.message,
-        },
+        data: { success: false, status: 400, message: authErr.message },
       });
     }
 
+    // 2) insert profile
     const { error: profileErr } = await supabase.from('profiles').insert({
       user_id: authUser.user.id,
       full_name: fullName,
       phone,
+      role_id,          // now provided
+      profile_image,    // now provided
     });
 
     if (profileErr) {
+      // clean up the orphan auth user so you can retry safely
+      await supabase.auth.admin.deleteUser(authUser.user.id);
       return res.status(400).json({
-        data: {
-          success: false,
-          status: 400,
-          message: profileErr.message,
-        },
+        data: { success: false, status: 400, message: profileErr.message },
       });
     }
 
+    // 3) done
     return res.status(201).json({
       data: {
         success: true,
@@ -66,6 +73,7 @@ const register = async (req, res) => {
     });
   }
 };
+
 
 /* ────────── Login ────────── */
 const login = async (req, res) => {

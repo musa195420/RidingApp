@@ -23,7 +23,8 @@ const routes = {
       profile: require('./api/profile/profile.router'),
        ride: require('./api/ride/ride.router'),
        driverLocation: require('./api/driverLocation/driverLocation.router'),
-       rideStatus: require('./api/rideStatus/rideStatus.router')
+       rideStatus: require('./api/rideStatus/rideStatus.router'),
+         role: require('./api/role/role.routes')
   
 };
 
@@ -40,7 +41,7 @@ app.use('/api/profile', routes.profile);
 app.use('/api/ride', routes.ride);
 app.use('/api/driverLocation', routes.driverLocation);
 app.use('/api/rideStatus', routes.rideStatus);
-
+app.use('/api/role', routes.role);
 
 // Base API Check
 app.get('/api', async (req, res) => {
