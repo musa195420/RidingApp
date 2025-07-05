@@ -1,3 +1,4 @@
+// verifyToken.js  (factory version)
 const jwt = require('jsonwebtoken');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
@@ -8,15 +9,13 @@ const checkToken = (allowRefresh = false) => (req, res, next) => {
     return res.status(401).json({ message: 'Token missing' });
   }
 
-  token = token.slice(7); // remove 'Bearer '
+  token = token.slice(7);
 
   jwt.verify(token, ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       if (allowRefresh) {
         jwt.verify(token, REFRESH_TOKEN_SECRET, (err2, decoded2) => {
-          if (err2) {
-            return res.status(403).json({ message: 'Invalid token: ' + err2.message });
-          }
+          if (err2) return res.status(403).json({ message: 'Invalid token: ' + err2.message });
 
           req.user = decoded2;
           next();
@@ -31,4 +30,4 @@ const checkToken = (allowRefresh = false) => (req, res, next) => {
   });
 };
 
-module.exports = checkToken;
+module.exports = checkToken;     // ← export the factory

@@ -15,8 +15,15 @@ const supabase = require('./config/database');
 
 // Routers
 const routes = {
-    auth: require('./api/auth/auth.router')
+    auth: require('./api/auth/auth.router'),
+    driver: require('./api/driver/driver.router'),
  // riders: require('./api/users/user.router'),
+    passenger: require('./api/passenger/passenger.router'),
+     vehicle: require('./api/vehicle/vehicle.router'),
+      profile: require('./api/profile/profile.router'),
+       ride: require('./api/ride/ride.router'),
+       driverLocation: require('./api/driverLocation/driverLocation.router'),
+       rideStatus: require('./api/rideStatus/rideStatus.router')
   
 };
 
@@ -26,6 +33,13 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', routes.auth);
+app.use('/api/driver', routes.driver);
+app.use('/api/passenger', routes.passenger);
+app.use('/api/vehicle', routes.vehicle);
+app.use('/api/profile', routes.profile);
+app.use('/api/ride', routes.ride);
+app.use('/api/driverLocation', routes.driverLocation);
+app.use('/api/rideStatus', routes.rideStatus);
 
 
 // Base API Check
