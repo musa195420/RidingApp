@@ -15,7 +15,7 @@ const {
 router.post('/', checkToken, createRole);
 
 /* ───────── Read ───────── */
-router.get('/', checkToken, getAllRoles);
+router.get('/',  getAllRoles);
 router.post('/code', checkToken, getRoleByCode); // code in body
 router.get('/:id', checkToken, getRoleById);
 

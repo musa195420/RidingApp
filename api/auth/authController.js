@@ -7,6 +7,8 @@ const {
   isRefreshTokenValid,
 } = require('./tokenService');
 
+const { createProfile } = require('../profile/profile.service');
+
 const { REFRESH_TOKEN_SECRET, TOKEN_TIME } = process.env;
 
 /* ────────── Register ────────── */
@@ -17,12 +19,12 @@ const register = async (req, res) => {
     password,
     fullName,
     phone,
-    role_id,        // take from body
-    profile_image,  // take from body (may be empty string)
+    role_id,
+    profile_image,
   } = req.body;
 
   try {
-    // 1) create auth user
+    /** 1) create auth user */
     const { data: authUser, error: authErr } =
       await supabase.auth.admin.createUser({
         email,
@@ -31,45 +33,43 @@ const register = async (req, res) => {
       });
 
     if (authErr) {
-      return res.status(400).json({
-        data: { success: false, status: 400, message: authErr.message },
-      });
+      return res
+        .status(400)
+        .json({ success: false, status: 400, message: authErr.message });
     }
 
-    // 2) insert profile
-    const { error: profileErr } = await supabase.from('profiles').insert({
-      user_id: authUser.user.id,
-      full_name: fullName,
-      phone,
-      role_id,          // now provided
-      profile_image,    // now provided
-    });
-
-    if (profileErr) {
-      // clean up the orphan auth user so you can retry safely
+    /** 2) create profile via service */
+    try {
+      await createProfile({
+        user_id: authUser.user.id,
+        full_name: fullName,
+        phone,
+        role_id,
+        email,
+        profile_image,
+      });
+    } catch (profileErr) {
+      // rollback orphan auth user so client can retry safely
       await supabase.auth.admin.deleteUser(authUser.user.id);
-      return res.status(400).json({
-        data: { success: false, status: 400, message: profileErr.message },
-      });
+      return res
+        .status(400)
+        .json({ success: false, status: 400, message: profileErr.message });
     }
 
-    // 3) done
+    /** 3) done */
     return res.status(201).json({
-      data: {
-        success: true,
-        status: 201,
-        message: 'User registered',
-        userId: authUser.user.id,
-      },
+      success: true,
+      status: 201,
+      message: 'User registered',
+      userId: authUser.user.id,
     });
   } catch (err) {
+    console.error(err);
     return res.status(500).json({
-      data: {
-        success: false,
-        status: 500,
-        message: 'Server error',
-        error: err.message,
-      },
+      success: false,
+      status: 500,
+      message: 'Server error',
+      error: err.message,
     });
   }
 };

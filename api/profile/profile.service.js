@@ -2,6 +2,7 @@ const supabase = require('../../config/database');
 
 module.exports = {
   createProfile: async (data) => {
+    console.log(data);
     const { error, data: result } = await supabase.from('profiles').insert([data]);
     if (error) throw new Error(error.message);
     return result;

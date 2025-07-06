@@ -10,11 +10,11 @@ const {
 
 const checkToken = require('../auth/verifyToken');
 
-router.post('/', checkToken, createProfile);
-router.get('/', checkToken, getAllProfiles);
-router.post('/email', checkToken, getProfileByEmail);
-router.get('/:id', checkToken, getProfileById);
-router.patch('/', checkToken, updateProfile);
-router.delete('/', checkToken, deleteProfile);
+router.post('/', checkToken(), createProfile);
+router.get('/', checkToken(), getAllProfiles);
+router.post('/email', checkToken(), getProfileByEmail);
+router.get('/:id', checkToken(), getProfileById);
+router.patch('/', checkToken(), updateProfile);
+router.delete('/', checkToken(), deleteProfile);
 
 module.exports = router;
