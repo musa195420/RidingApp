@@ -79,4 +79,5 @@ module.exports = {
     const { error } = await supabase.from('rides').delete().eq('id', id);
     if (error) throw new Error(error.message);
   },
+
 };

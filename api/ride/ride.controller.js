@@ -4,7 +4,7 @@ const {
   getAllRides,
   getRidesByUserId,
   updateRide,
-  deleteRide,
+  deleteRide
 } = require('./ride.service');
 
 module.exports = {
@@ -112,4 +112,5 @@ module.exports = {
         .json({ success: false, status: 500, message: 'Database Error', error: err.message });
     }
   },
+
 };

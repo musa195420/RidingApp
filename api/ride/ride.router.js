@@ -5,7 +5,7 @@ const {
   getAllRides,
   getRidesByUserId,
   updateRide,
-  deleteRide,
+  deleteRide
 } = require('./ride.controller');
 
 const checkToken = require('../auth/verifyToken');

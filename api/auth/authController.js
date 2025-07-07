@@ -17,7 +17,7 @@ const register = async (req, res) => {
   const {
     email,
     password,
-    fullName,
+    full_name,
     phone,
     role_id,
     profile_image,
@@ -42,7 +42,7 @@ const register = async (req, res) => {
     try {
       await createProfile({
         user_id: authUser.user.id,
-        full_name: fullName,
+        full_name: full_name,
         phone,
         role_id,
         email,

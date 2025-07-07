@@ -9,10 +9,10 @@ const {
 
 const checkToken = require('../auth/verifyToken');
 
-router.post('/', checkToken, createVehicle);
-router.get('/', checkToken, getAllVehicles);
-router.get('/:id', checkToken, getVehicleById);
-router.patch('/', checkToken, updateVehicle);
-router.delete('/', checkToken, deleteVehicle);
+router.post('/', checkToken(), createVehicle);
+router.get('/', checkToken(), getAllVehicles);
+router.get('/:id', checkToken(), getVehicleById);
+router.patch('/', checkToken(), updateVehicle);
+router.delete('/', checkToken(), deleteVehicle);
 
 module.exports = router;
